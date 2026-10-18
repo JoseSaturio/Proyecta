@@ -15,7 +15,7 @@ Plataforma web para estudiantes de últimos ciclos y recién egresados: resuelve
 ## Tecnologías
 
 - **HTML5** – estructura
-- **CSS3** – diseño responsive (paleta blanco y rosa, sin frameworks)
+- **CSS3** – diseño responsive (paleta blanco y azul claro, sin frameworks)
 - **JavaScript (vanilla)** – SPA con rutas por hash, motor de feedback y `localStorage` para guardar datos
 
 No requiere instalación ni compilación.

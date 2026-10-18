@@ -91,9 +91,9 @@
       </section>
 
       <section class="stats">
-        ${stat(ICON.reto, RETOS.length, "Retos de práctica", "pink")}
-        ${stat(ICON.entrega, estado.entregas.length, "Entregas realizadas", "rose")}
-        ${stat(ICON.progreso, progreso() + "%", "Recorrido completado", "berry")}
+        ${stat(ICON.reto, RETOS.length, "Retos de práctica", "blue")}
+        ${stat(ICON.entrega, estado.entregas.length, "Entregas realizadas", "sky")}
+        ${stat(ICON.progreso, progreso() + "%", "Recorrido completado", "navy")}
       </section>
 
       <section class="section">
@@ -266,9 +266,9 @@
         </div>
 
         <div class="stats">
-          ${stat(ICON.reto, `${mejores.length}/${RETOS.length}`, "Retos completados", "pink")}
-          ${stat(ICON.progreso, promedio, "Puntaje promedio", "rose")}
-          ${stat(ICON.entrega, habilidades.length, "Habilidades demostradas", "berry")}
+          ${stat(ICON.reto, `${mejores.length}/${RETOS.length}`, "Retos completados", "blue")}
+          ${stat(ICON.progreso, promedio, "Puntaje promedio", "sky")}
+          ${stat(ICON.entrega, habilidades.length, "Habilidades demostradas", "navy")}
         </div>
 
         ${habilidades.length ? `<div class="card"><h3>Habilidades demostradas</h3><div class="tags">${habilidades.map(h => `<span class="chip">${esc(h)}</span>`).join("")}</div></div>` : ""}
