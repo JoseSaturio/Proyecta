@@ -16,7 +16,7 @@
   }
 
   /* ---------- Estado persistente ---------- */
-  const KEY = "proyecta:v1";
+  const KEY = "proyecta:v2";
   const estadoInicial = { perfil: null, entregas: [] };
   const cargar = () => {
     try { return { ...estadoInicial, ...JSON.parse(localStorage.getItem(KEY)) }; }
@@ -101,7 +101,7 @@
         <p class="muted">Una ruta de tres pasos para demostrar lo que sabes.</p>
         <div class="steps">
           <div class="card step"><span class="step__n">01</span><div><h3>Construye tu perfil</h3><p class="muted">Indica tu carrera, tu ciclo o año de egreso, tus intereses y tu objetivo profesional.</p></div></div>
-          <div class="card step"><span class="step__n">02</span><div><h3>Resuelve retos verificados</h3><p class="muted">Aplica lo que sabes a situaciones reales planteadas y validadas por empresas.</p></div></div>
+          <div class="card step"><span class="step__n">02</span><div><h3>Resuelve retos verificados</h3><p class="muted">Marca la mejor opción en situaciones reales planteadas por empresas y, si quieres, justifica en pocas palabras.</p></div></div>
           <div class="card step"><span class="step__n">03</span><div><h3>Recibe feedback y muestra tu evidencia</h3><p class="muted">Cada entrega recibe recomendaciones de mejora y se guarda en tu portafolio.</p></div></div>
         </div>
       </section>
@@ -124,7 +124,7 @@
       <section class="section section--first">
         <p class="eyebrow">Catálogo</p>
         <h1 class="page-title">Retos para mejorar tus habilidades</h1>
-        <p class="muted">${RETOS.length} retos verificados por empresas para practicar habilidades técnicas y blandas. Cada uno toma entre 15 y 25 minutos.</p>
+        <p class="muted">${RETOS.length} retos verificados por empresas para practicar habilidades técnicas y blandas. Cada uno son 4 preguntas para marcar y toma entre 5 y 10 minutos.</p>
         <div class="toolbar">
           <input type="search" id="buscar" class="input" placeholder="Buscar por tema, habilidad o empresa…" value="${esc(busqueda)}" aria-label="Buscar retos">
           <div class="filters" role="group" aria-label="Filtrar por área">
@@ -153,20 +153,39 @@
           <p class="eyebrow">Entrega · ${esc(r.area)}</p>
           <h1 class="page-title">${esc(r.titulo)}</h1>
           <p class="verified">${ICON.verif} Verificado por <strong>${esc(r.empresa)}</strong> · caso ficticio</p>
-          <form id="formEntrega" class="card form">
-            <label for="respuesta" class="label">Tu propuesta</label>
-            <p class="hint">Responde punto por punto. Usa viñetas, define responsables y agrega al menos una cifra o meta.</p>
-            <textarea id="respuesta" class="input textarea" rows="12" required minlength="20" placeholder="1. Problema identificado: …&#10;2. Acción: … Responsable: …&#10;3. Indicador: …"></textarea>
-            <div class="form__foot">
-              <span class="meta" id="contador">0 palabras</span>
-              <button class="btn btn--primary" type="submit">Enviar y recibir feedback ${ICON.flecha}</button>
+          <form id="formEntrega" class="quiz">
+            <div class="quiz__progress card">
+              <span><strong id="respondidas">0</strong> de ${PREGUNTAS[id].length} respondidas</span>
+              <div class="bar"><span id="barraQuiz" style="width:0%"></span></div>
+            </div>
+            ${PREGUNTAS[id].map((q, i) => `
+              <fieldset class="card question">
+                <legend class="question__label">Pregunta ${i + 1} · ${esc(r.criterios[i].texto)}</legend>
+                <p class="question__text">${esc(q.p)}</p>
+                <div class="options">
+                  ${q.o.map((op, j) => `
+                    <label class="option">
+                      <input type="radio" name="q${i}" id="q${i}o${j}" value="${j}" ${j === 0 ? "required" : ""}>
+                      <span class="option__mark" aria-hidden="true">${"ABCD"[j]}</span>
+                      <span>${esc(op)}</span>
+                    </label>`).join("")}
+                </div>
+              </fieldset>`).join("")}
+            <div class="card form">
+              <label for="respuesta" class="label label--first">Justifica en pocas palabras <span class="optional">Opcional · hasta +15 puntos</span></label>
+              <p class="hint">Por ejemplo: qué harías primero y qué meta te pondrías.</p>
+              <textarea id="respuesta" class="input textarea textarea--short" rows="3" placeholder="Ej. Primero asignaría un responsable por turno y mediría el tiempo de respuesta con una meta de 10 minutos."></textarea>
+              <div class="form__foot">
+                <span class="meta" id="contador">0 palabras</span>
+                <button class="btn btn--primary" type="submit">Enviar y recibir feedback ${ICON.flecha}</button>
+              </div>
             </div>
           </form>
           ${previa ? `<p class="muted small">Ya resolviste este reto (mejor puntaje: ${previa.feedback.puntaje}/100). Puedes intentarlo otra vez para mejorar.</p>` : ""}
         </div>
         <aside class="card brief">
           <h3>Situación de práctica</h3><p class="muted">${esc(r.situacion)}</p>
-          <h3>Lo que debes entregar</h3><p class="muted">${esc(r.entregable)}</p>
+          <h3>Lo que vas a resolver</h3><p class="muted">${esc(r.entregable)}</p>
           <h3>Criterios de evaluación</h3>
           <ul class="checklist">${r.criterios.map(c => `<li>${esc(c.texto)}</li>`).join("")}</ul>
           <h3>Habilidades que demuestras</h3>
@@ -192,17 +211,21 @@
           <div>
             <span class="level ${f.nivelClase}">${f.nivel}</span>
             <p class="lead">${esc(f.resumen)}</p>
-            <p class="muted small">${f.palabras} palabras · Entregado el ${fecha(e.fecha)} · Revisión orientativa automática</p>
+            <p class="muted small">${f.aciertos} de ${f.total} respuestas correctas${f.bonoTexto ? ` · +${f.bonoTexto} por tu justificación` : ""} · ${fecha(e.fecha)}</p>
           </div>
         </div>
 
         <div class="card">
-          <h3>Desempeño por criterio</h3>
-          <div class="criteria">
-            ${f.criterios.map(c => `
-              <div class="crit">
-                <div class="crit__row"><span>${esc(c.texto)}</span><span class="muted">${c.puntos}/3</span></div>
-                <div class="bar"><span style="width:${c.puntos / 3 * 100}%"></span></div>
+          <h3>Revisión de tus respuestas</h3>
+          <div class="review">
+            ${f.criterios.map((c, i) => `
+              <div class="review__item ${c.correcta ? "is-ok" : "is-bad"}">
+                <span class="review__icon" aria-hidden="true">${c.correcta ? "✓" : "✕"}</span>
+                <div>
+                  <p class="review__q"><strong>${i + 1}. ${esc(c.pregunta)}</strong></p>
+                  <p class="small">Tu respuesta: ${esc(c.elegida)}${c.correcta ? "" : `<br>Respuesta recomendada: <strong>${esc(c.correctaTexto)}</strong>`}</p>
+                  <p class="small muted">${esc(c.explica)}</p>
+                </div>
               </div>`).join("")}
           </div>
         </div>
@@ -212,13 +235,13 @@
           <div class="card fb fb--improve"><h3>Para mejorar</h3><ul>${f.mejoras.map(x => `<li>${esc(x)}</li>`).join("") || "<li>¡No hay observaciones pendientes!</li>"}</ul></div>
         </div>
 
-        <details class="card">
-          <summary>Ver mi entrega</summary>
+        ${e.texto ? `<details class="card">
+          <summary>Ver mi justificación</summary>
           <pre class="entrega-texto">${esc(e.texto)}</pre>
-        </details>
+        </details>` : ""}
 
         <div class="actions">
-          <a href="#/participar/${r.id}" class="btn btn--outline">Mejorar mi entrega</a>
+          <a href="#/participar/${r.id}" class="btn btn--outline">Intentar de nuevo</a>
           <a href="#/portafolio" class="btn btn--primary">Ver en mi portafolio ${ICON.flecha}</a>
         </div>
       </section>`;
@@ -262,7 +285,7 @@
                 </div>
                 <span class="level ${e.feedback.nivelClase}">${e.feedback.puntaje}/100 · ${e.feedback.nivel}</span>
               </div>
-              <p class="muted clamp">${esc(e.texto)}</p>
+              <p class="muted">${e.feedback.aciertos} de ${e.feedback.total} respuestas correctas${e.texto ? ` · “${esc(e.texto.length > 140 ? e.texto.slice(0, 140) + "…" : e.texto)}”` : ""}</p>
               <div class="tags">${r.habilidades.map(h => `<span class="chip chip--ghost">${esc(h)}</span>`).join("")}</div>
               ${e.feedback.mejoras[0] ? `<p class="next-step"><strong>Siguiente paso:</strong> ${esc(e.feedback.mejoras[0])}</p>` : ""}
               <a class="link no-print" href="#/feedback/${e.id}">Ver feedback completo →</a>
@@ -340,7 +363,7 @@
       <h2 id="modalTitle">${esc(r.titulo)}</h2>
       <p class="meta-line"><strong>${esc(r.empresa)} · caso ficticio</strong> · ${esc(r.area)} · ${r.minutos} minutos</p>
       <div class="box"><h3>Situación de práctica</h3><p>${esc(r.situacion)}</p></div>
-      <div class="box"><h3>Lo que debes entregar</h3><p>${esc(r.entregable)}</p></div>
+      <div class="box"><h3>Lo que vas a resolver</h3><p>${esc(r.entregable)}</p></div>
       <div class="box"><h3>Criterios orientativos</h3><ul>${r.criterios.map(c => `<li>${esc(c.texto)}</li>`).join("")}</ul></div>
       <div class="notice">Los retos de esta versión son simulados y ninguna organización real evaluará tu entrega.</div>
       <div class="modal__actions">
@@ -420,6 +443,12 @@
       busqueda = e.target.value;
       document.getElementById("listaRetos").innerHTML = listaRetos();
     }
+    if (e.target.matches?.('#formEntrega input[type="radio"]')) {
+      const total = PREGUNTAS[rutaActual.split("/")[1]].length;
+      const n = new Set([...document.querySelectorAll('#formEntrega input[type="radio"]:checked')].map(x => x.name)).size;
+      document.getElementById("respondidas").textContent = n;
+      document.getElementById("barraQuiz").style.width = `${n / total * 100}%`;
+    }
     if (e.target.id === "respuesta") {
       const n = e.target.value.trim().split(/\s+/).filter(Boolean).length;
       document.getElementById("contador").textContent = `${n} palabra${n === 1 ? "" : "s"}`;
@@ -444,8 +473,10 @@
     }
     if (e.target.id === "formEntrega") {
       const id = rutaActual.split("/")[1];
+      const d = new FormData(e.target);
+      const respuestas = PREGUNTAS[id].map((_, i) => Number(d.get(`q${i}`)));
       const texto = document.getElementById("respuesta").value.trim();
-      const entrega = { id: Date.now().toString(36), retoId: id, texto, fecha: new Date().toISOString(), feedback: Feedback.evaluar(reto(id), texto) };
+      const entrega = { id: Date.now().toString(36), retoId: id, respuestas, texto, fecha: new Date().toISOString(), feedback: Feedback.evaluar(reto(id), respuestas, texto) };
       estado.entregas.push(entrega);
       guardar();
       ir(`feedback/${entrega.id}`);

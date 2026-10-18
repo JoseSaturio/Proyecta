@@ -7,7 +7,7 @@ Plataforma web para estudiantes de últimos ciclos y recién egresados: resuelve
 - **Inicio**: propuesta de valor, estadísticas de avance y retos destacados.
 - **Catálogo de retos**: búsqueda y filtro por área (Administración, Contabilidad, Marketing, RR. HH., Tecnología, Diseño).
 - **Ficha de reto**: situación, entregable, criterios y empresa que lo verifica.
-- **Entrega**: el estudiante redacta su propuesta.
+- **Entrega**: 4 preguntas de opción múltiple por reto y una justificación breve opcional (+15 puntos).
 - **Feedback de mejora**: puntaje /100, nivel, desempeño por criterio, fortalezas y recomendaciones.
 - **Portafolio**: perfil, habilidades demostradas, experiencias con su puntaje y siguiente paso; exportable a PDF.
 - **Perfil**: carrera, situación académica, institución, intereses y objetivo profesional.
@@ -35,6 +35,7 @@ python3 -m http.server 8000
 index.html        Estructura principal
 css/styles.css    Estilos
 js/data.js        Catálogo de retos y empresas (ficticias)
+js/preguntas.js   Preguntas de opción múltiple por reto
 js/feedback.js    Motor de feedback orientativo
 js/app.js         Rutas, vistas, perfil, entregas y portafolio
 ```

@@ -1,4 +1,4 @@
-/* Motor de feedback orientativo: analiza la entrega frente a los criterios del reto. */
+/* Motor de feedback orientativo: califica las respuestas marcadas y la justificación opcional. */
 const Feedback = (() => {
   const normalizar = t => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
@@ -9,55 +9,53 @@ const Feedback = (() => {
     { min: 0, nombre: "Inicial", clase: "lvl-1" }
   ];
 
-  function evaluar(reto, texto) {
+  const PUNTOS_PREGUNTAS = 85;
+  const PUNTOS_TEXTO = 15;
+
+  function evaluar(reto, respuestas, texto = "") {
+    const preguntas = PREGUNTAS[reto.id];
+    const criterios = preguntas.map((q, i) => ({
+      texto: reto.criterios[i].texto,
+      pregunta: q.p,
+      elegida: q.o[respuestas[i]],
+      correctaTexto: q.o[q.c],
+      correcta: respuestas[i] === q.c,
+      explica: q.e
+    }));
+    const aciertos = criterios.filter(c => c.correcta).length;
+
     const t = normalizar(texto);
     const palabras = t.split(/\s+/).filter(Boolean).length;
-    const tieneLista = /(^|\n)\s*([-•*]|\d+[.)])\s+/.test(texto);
-    const tieneNumeros = /\d/.test(texto);
+    let bonoTexto = 0;
+    if (palabras) {
+      const claves = reto.criterios.flatMap(c => c.claves).filter(k => t.includes(normalizar(k))).length;
+      bonoTexto = Math.min(PUNTOS_TEXTO, claves * 2 + (palabras >= 30 ? 4 : palabras >= 12 ? 2 : 0) + (/\d/.test(texto) ? 2 : 0));
+    }
 
-    const criterios = reto.criterios.map(c => {
-      const hallados = c.claves.filter(k => t.includes(normalizar(k)));
-      const puntos = Math.min(3, hallados.length);
-      return { texto: c.texto, puntos, hallados };
-    });
-
-    let base = criterios.reduce((s, c) => s + c.puntos, 0) / (criterios.length * 3) * 80;
-    if (palabras >= 80) base += 8; else if (palabras >= 40) base += 4;
-    if (tieneLista) base += 6;
-    if (tieneNumeros) base += 6;
-    const puntaje = Math.round(Math.min(100, base));
+    const puntaje = Math.round(Math.min(100, aciertos / preguntas.length * PUNTOS_PREGUNTAS + bonoTexto));
     const nivel = NIVELES.find(n => puntaje >= n.min);
 
     const fortalezas = [];
     const mejoras = [];
-
     criterios.forEach(c => {
-      if (c.puntos >= 2) fortalezas.push(`${c.texto}: lo abordas con claridad.`);
-      else if (c.puntos === 1) mejoras.push(`${c.texto}: está presente, pero desarróllalo con más detalle o un ejemplo.`);
-      else mejoras.push(`${c.texto}: no se identifica en tu entrega. Agrégalo de forma explícita.`);
+      if (c.correcta) fortalezas.push(`${c.texto}: elegiste la mejor opción.`);
+      else mejoras.push(`${c.texto}: ${c.explica}`);
     });
 
-    if (palabras < 40) mejoras.push("Tu respuesta es muy breve. Explica el porqué de cada propuesta (apunta a 80–200 palabras).");
-    else if (palabras < 80) mejoras.push("Puedes profundizar un poco más: justifica brevemente por qué cada propuesta funcionaría.");
-    else if (palabras > 400) mejoras.push("Tu respuesta es extensa. Sintetiza: una empresa valora propuestas directas.");
-    else fortalezas.push("La extensión es adecuada para una propuesta ejecutiva.");
-
-    if (tieneLista) fortalezas.push("Organizas las ideas en lista, lo que facilita la lectura.");
-    else mejoras.push("Usa viñetas o pasos numerados para que tu propuesta sea más fácil de revisar.");
-
-    if (tieneNumeros) fortalezas.push("Incluyes cifras o metas concretas, lo que hace tu propuesta medible.");
-    else mejoras.push("Añade al menos una cifra (meta, plazo, porcentaje o monto) para que tu propuesta sea verificable.");
+    if (!palabras) mejoras.push(`Agrega una justificación breve (opcional) para practicar tu redacción y sumar hasta ${PUNTOS_TEXTO} puntos.`);
+    else if (bonoTexto >= 10) fortalezas.push("Tu justificación usa conceptos clave del reto y respalda tus respuestas.");
+    else mejoras.push("Tu justificación suma, pero puedes reforzarla con términos del reto y una cifra o meta concreta.");
 
     if (!mejoras.length) mejoras.push("Para llevarlo al siguiente nivel, anticipa un riesgo de tu propuesta y cómo lo mitigarías.");
 
     const resumen = {
-      "Destacado": "Excelente trabajo. Tu propuesta es sólida y está lista para mostrarse en tu portafolio.",
-      "Logrado": "Buen trabajo. Cumples con lo principal; con algunos ajustes tu propuesta será sobresaliente.",
-      "En desarrollo": "Vas por buen camino. Refuerza los criterios señalados y vuelve a intentarlo.",
-      "Inicial": "Es un primer paso. Revisa la ficha del reto y responde punto por punto a lo que se pide."
+      "Destacado": "Excelente trabajo. Dominas este reto y está listo para mostrarse en tu portafolio.",
+      "Logrado": "Buen trabajo. Cumples con lo principal; revisa las recomendaciones para llegar a destacado.",
+      "En desarrollo": "Vas por buen camino. Lee las explicaciones de las preguntas que fallaste y vuelve a intentarlo.",
+      "Inicial": "Es un primer paso. Revisa la ficha del reto y las explicaciones antes de tu siguiente intento."
     }[nivel.nombre];
 
-    return { puntaje, nivel: nivel.nombre, nivelClase: nivel.clase, criterios, fortalezas, mejoras, resumen, palabras };
+    return { puntaje, nivel: nivel.nombre, nivelClase: nivel.clase, aciertos, total: preguntas.length, bonoTexto, criterios, fortalezas, mejoras, resumen, palabras };
   }
 
   return { evaluar };
