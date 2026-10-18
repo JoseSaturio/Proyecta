@@ -5,6 +5,15 @@
   const modal = document.getElementById("modal");
   const modalPanel = document.getElementById("modalPanel");
   const toast = document.getElementById("toast");
+  const ENMARCADO = window.self !== window.top;
+
+  /* Navegación: guarda la ruta en memoria y la refleja en el hash cuando es posible. */
+  let rutaActual = /^#\/[\w/-]+$/.test(location.hash) ? location.hash.slice(2) : "inicio";
+  function ir(ruta) {
+    rutaActual = ruta.replace(/^#?\/?/, "");
+    try { history.replaceState(null, "", "#/" + rutaActual); } catch { /* sin historial */ }
+    render();
+  }
 
   /* ---------- Estado persistente ---------- */
   const KEY = "proyecta:v1";
@@ -229,7 +238,7 @@
             <p class="muted">${p ? `${esc(p.carrera)} · ${esc(p.situacion)}${p.institucion ? " · " + esc(p.institucion) : ""}` : `<a href="#/perfil" class="link">Completa tu perfil</a> para personalizar tu portafolio.`}</p>
             ${p?.objetivo ? `<p class="objective">“${esc(p.objetivo)}”</p>` : ""}
           </div>
-          <button class="btn btn--outline no-print" id="imprimir">Descargar PDF</button>
+          ${ENMARCADO ? "" : `<button class="btn btn--outline no-print" id="imprimir">Descargar PDF</button>`}
         </div>
 
         <div class="stats">
@@ -306,6 +315,13 @@
             ${estado.perfil ? `<button type="button" class="btn btn--ghost" id="borrar">Borrar mis datos</button>` : "<span></span>"}
             <button class="btn btn--primary" type="submit">Guardar perfil</button>
           </div>
+          <div class="confirm" id="confirmBorrar" hidden>
+            <p>¿Seguro que quieres borrar tu perfil y todas tus entregas? Esta acción no se puede deshacer.</p>
+            <div class="actions">
+              <button type="button" class="btn btn--outline" id="cancelarBorrar">Cancelar</button>
+              <button type="button" class="btn btn--primary" id="confirmarBorrar">Sí, borrar todo</button>
+            </div>
+          </div>
         </form>
       </section>`;
   }
@@ -352,7 +368,7 @@
   };
 
   function render() {
-    const [, nombre = "inicio", param] = location.hash.split("/");
+    const [nombre = "inicio", param] = rutaActual.split("/");
     const ruta = RUTAS[nombre] || RUTAS.inicio;
     cerrarFicha();
     app.innerHTML = ruta.vista(param);
@@ -365,6 +381,9 @@
 
   /* ---------- Eventos ---------- */
   document.addEventListener("click", e => {
+    const enlace = e.target.closest('a[href^="#/"]');
+    if (enlace) { e.preventDefault(); ir(enlace.getAttribute("href")); return; }
+
     const ver = e.target.closest("[data-ver]");
     if (ver) return abrirFicha(ver.dataset.ver);
 
@@ -379,11 +398,13 @@
 
     if (e.target.closest("#imprimir")) window.print();
 
-    if (e.target.closest("#borrar") && confirm("¿Seguro que quieres borrar tu perfil y todas tus entregas?")) {
+    if (e.target.closest("#borrar")) document.getElementById("confirmBorrar").hidden = false;
+    if (e.target.closest("#cancelarBorrar")) document.getElementById("confirmBorrar").hidden = true;
+    if (e.target.closest("#confirmarBorrar")) {
       estado = { ...estadoInicial, entregas: [] };
       guardar();
       mostrarToast("Tus datos fueron eliminados.");
-      location.hash = "#/inicio";
+      ir("inicio");
     }
 
     if (e.target.closest("#menuToggle")) {
@@ -418,19 +439,21 @@
       };
       guardar();
       mostrarToast("Perfil guardado correctamente.");
-      location.hash = "#/retos";
+      ir("retos");
     }
     if (e.target.id === "formEntrega") {
-      const id = location.hash.split("/")[2];
+      const id = rutaActual.split("/")[1];
       const texto = document.getElementById("respuesta").value.trim();
       const entrega = { id: Date.now().toString(36), retoId: id, texto, fecha: new Date().toISOString(), feedback: Feedback.evaluar(reto(id), texto) };
       estado.entregas.push(entrega);
       guardar();
-      location.hash = `#/feedback/${entrega.id}`;
+      ir(`feedback/${entrega.id}`);
     }
   });
 
   document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarFicha(); });
-  window.addEventListener("hashchange", render);
+  window.addEventListener("hashchange", () => {
+    if (/^#\/[\w/-]+$/.test(location.hash) && location.hash.slice(2) !== rutaActual) ir(location.hash);
+  });
   render();
 })();
