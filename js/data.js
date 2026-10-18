@@ -101,6 +101,142 @@ const RETOS = [
       { texto: "Elige una tipografía adecuada", claves: ["tipografia", "fuente", "serif", "sans", "legible", "letra"] },
       { texto: "Muestra aplicaciones concretas", claves: ["empaque", "vaso", "post", "instagram", "carta", "menu", "letrero", "aplicacion"] }
     ]
+  },
+  {
+    id: "pitch",
+    titulo: "Prepara tu pitch personal de 60 segundos",
+    empresa: "Red Mentora",
+    area: "Habilidades blandas",
+    minutos: 15,
+    nivel: "Básico",
+    situacion: "Un reclutador ficticio te da un minuto en una feria laboral para presentarte. Muchos jóvenes desaprovechan ese momento porque no saben qué destacar.",
+    entregable: "Escribe tu pitch: quién eres, qué sabes hacer (con un logro concreto), qué buscas y una pregunta de cierre para el reclutador.",
+    habilidades: ["Comunicación oral", "Marca personal", "Autoconocimiento"],
+    criterios: [
+      { texto: "Se presenta con claridad", claves: ["soy", "estudiante", "egresad", "carrera", "me llamo", "ciclo"] },
+      { texto: "Muestra un logro concreto", claves: ["logre", "logro", "proyecto", "aument", "reduj", "organice", "lidere", "%"] },
+      { texto: "Expresa qué busca", claves: ["busco", "practicas", "puesto", "oportunidad", "area", "me interesa", "objetivo"] },
+      { texto: "Cierra con una pregunta", claves: ["?", "pregunta", "podria", "que valoran", "como es"] }
+    ]
+  },
+  {
+    id: "conflicto",
+    titulo: "Resuelve un conflicto en un equipo de trabajo",
+    empresa: "Grupo Sinergia",
+    area: "Habilidades blandas",
+    minutos: 20,
+    nivel: "Intermedio",
+    situacion: "En un equipo de cuatro practicantes, dos integrantes discuten porque uno siente que hace todo el trabajo. La entrega del proyecto es en una semana.",
+    entregable: "Describe cómo mediarías: la conversación que propondrías, cómo redistribuirías tareas y cómo darías seguimiento para evitar que se repita.",
+    habilidades: ["Trabajo en equipo", "Resolución de conflictos", "Liderazgo"],
+    criterios: [
+      { texto: "Escucha ambas partes", claves: ["escuchar", "escucha", "reunion", "conversacion", "ambas partes", "dialogo", "empatia"] },
+      { texto: "Redistribuye tareas de forma justa", claves: ["tarea", "distribu", "roles", "responsab", "asignar", "equitativ"] },
+      { texto: "Mantiene el foco en el objetivo", claves: ["entrega", "objetivo", "plazo", "proyecto", "meta", "fecha"] },
+      { texto: "Define un seguimiento", claves: ["seguimiento", "check", "semanal", "diario", "tablero", "trello", "revisar", "acuerdo"] }
+    ]
+  },
+  {
+    id: "excel",
+    titulo: "Automatiza un control de inventario en Excel",
+    empresa: "Almacenes Rímac",
+    area: "Logística",
+    minutos: 20,
+    nivel: "Intermedio",
+    situacion: "Una ferretería anota sus entradas y salidas de productos a mano. A veces se queda sin stock de los artículos que más se venden.",
+    entregable: "Describe la estructura de una hoja de inventario (columnas), dos fórmulas que usarías y una alerta para avisar cuando un producto llegue al stock mínimo.",
+    habilidades: ["Excel", "Gestión de inventarios", "Pensamiento lógico"],
+    criterios: [
+      { texto: "Define columnas útiles", claves: ["columna", "codigo", "producto", "entrada", "salida", "stock", "fecha", "precio"] },
+      { texto: "Usa fórmulas pertinentes", claves: ["suma", "sumar.si", "buscarv", "xlookup", "si(", "formula", "=", "contar.si"] },
+      { texto: "Configura una alerta de stock mínimo", claves: ["minimo", "alerta", "formato condicional", "rojo", "reposicion", "aviso"] },
+      { texto: "Conecta el control con una decisión", claves: ["compra", "pedido", "proveedor", "reponer", "decision", "rotacion"] }
+    ]
+  },
+  {
+    id: "ventas",
+    titulo: "Responde a la objeción de un cliente",
+    empresa: "Conecta Ventas",
+    area: "Ventas",
+    minutos: 15,
+    nivel: "Básico",
+    situacion: "Un cliente interesado en un plan de internet para su negocio dice: «Está muy caro, la competencia me ofrece algo más barato».",
+    entregable: "Redacta tu respuesta al cliente: valida su preocupación, muestra el valor del servicio con dos argumentos y propone un siguiente paso concreto.",
+    habilidades: ["Negociación", "Comunicación persuasiva", "Orientación al cliente"],
+    criterios: [
+      { texto: "Valida la preocupación del cliente", claves: ["entiendo", "comprendo", "es normal", "tiene razon", "valido", "preocupacion"] },
+      { texto: "Argumenta con valor, no solo precio", claves: ["valor", "beneficio", "velocidad", "soporte", "estabilidad", "ahorro", "garantia", "calidad"] },
+      { texto: "Usa datos o ejemplos", claves: ["%", "clientes", "ejemplo", "caso", "horas", "soles", "s/"] },
+      { texto: "Propone un siguiente paso", claves: ["prueba", "demo", "llamada", "visita", "propuesta", "descuento", "le parece", "agendar"] }
+    ]
+  },
+  {
+    id: "correo",
+    titulo: "Redacta un correo profesional difícil",
+    empresa: "Oficina Central Lima",
+    area: "Habilidades blandas",
+    minutos: 15,
+    nivel: "Básico",
+    situacion: "Como practicante, cometiste un error en un reporte que tu jefa ya envió a un cliente. Debes informarle y proponer cómo corregirlo.",
+    entregable: "Escribe el correo completo: asunto, saludo, explicación breve del error, la solución que propones y un cierre profesional.",
+    habilidades: ["Comunicación escrita", "Responsabilidad", "Resolución de problemas"],
+    criterios: [
+      { texto: "Incluye un asunto claro", claves: ["asunto", "correccion", "reporte", "urgente", "actualizacion"] },
+      { texto: "Reconoce el error con transparencia", claves: ["error", "equivoque", "disculpa", "lamento", "responsab", "detecte"] },
+      { texto: "Propone una solución concreta", claves: ["solucion", "corregido", "adjunto", "version", "propongo", "enviar", "revisare"] },
+      { texto: "Mantiene un tono profesional", claves: ["estimada", "saludos", "atentamente", "cordialmente", "quedo atent", "gracias"] }
+    ]
+  },
+  {
+    id: "procesos",
+    titulo: "Reduce los tiempos de entrega de pedidos",
+    empresa: "Rápido Express",
+    area: "Logística",
+    minutos: 25,
+    nivel: "Avanzado",
+    situacion: "Una empresa de delivery tarda en promedio 90 minutos en entregar pedidos dentro del distrito. Los clientes se quejan y algunos cancelan sus compras.",
+    entregable: "Identifica tres posibles cuellos de botella del proceso, propone una mejora para cada uno y estima el nuevo tiempo de entrega que esperarías lograr.",
+    habilidades: ["Mejora de procesos", "Análisis de problemas", "Logística"],
+    criterios: [
+      { texto: "Identifica cuellos de botella", claves: ["cuello de botella", "demora", "preparacion", "espera", "ruta", "despacho", "etapa"] },
+      { texto: "Propone mejoras viables", claves: ["mejora", "ruta", "agrupar", "zona", "aplicacion", "app", "turno", "priorizar"] },
+      { texto: "Usa un enfoque de proceso", claves: ["proceso", "flujo", "paso", "diagrama", "etapa", "secuencia"] },
+      { texto: "Estima un resultado medible", claves: ["minutos", "%", "reducir", "tiempo promedio", "meta", "estimo"] }
+    ]
+  },
+  {
+    id: "liderazgo",
+    titulo: "Organiza un voluntariado universitario",
+    empresa: "Fundación Raíces",
+    area: "Habilidades blandas",
+    minutos: 20,
+    nivel: "Intermedio",
+    situacion: "Te piden coordinar a 15 estudiantes voluntarios para una campaña de reciclaje en tu universidad durante un sábado. Nadie ha organizado algo así antes.",
+    entregable: "Presenta un plan con equipos y roles, un cronograma del día, cómo motivarías a los voluntarios y cómo medirías el impacto de la campaña.",
+    habilidades: ["Liderazgo", "Gestión de proyectos", "Responsabilidad social"],
+    criterios: [
+      { texto: "Organiza equipos y roles", claves: ["equipo", "rol", "coordinador", "grupo", "lider", "encargado"] },
+      { texto: "Plantea un cronograma", claves: ["hora", "am", "pm", "cronograma", "inicio", "cierre", "agenda", ":"] },
+      { texto: "Considera la motivación del grupo", claves: ["motiv", "reconocimiento", "certificado", "agradec", "dinamica", "integracion"] },
+      { texto: "Mide el impacto", claves: ["kilos", "kg", "impacto", "participantes", "medir", "indicador", "registro"] }
+    ]
+  },
+  {
+    id: "entrevista",
+    titulo: "Responde una pregunta de entrevista con el método STAR",
+    empresa: "Talento Andino",
+    area: "Recursos Humanos",
+    minutos: 15,
+    nivel: "Básico",
+    situacion: "En una entrevista para prácticas te preguntan: «Cuéntame de una vez en que resolviste un problema bajo presión».",
+    entregable: "Responde usando el método STAR: Situación, Tarea, Acción y Resultado. Puedes usar una experiencia académica, laboral o personal.",
+    habilidades: ["Entrevistas", "Comunicación", "Autoconocimiento"],
+    criterios: [
+      { texto: "Describe la situación", claves: ["situacion", "cuando", "en el curso", "en mi trabajo", "proyecto", "contexto"] },
+      { texto: "Explica su tarea o responsabilidad", claves: ["tarea", "mi rol", "debia", "responsable", "me toco", "objetivo"] },
+      { texto: "Detalla las acciones que tomó", claves: ["accion", "decidi", "organice", "propuse", "hable", "hice", "implemente"] },
+      { texto: "Cuantifica el resultado", claves: ["resultado", "logramos", "%", "nota", "a tiempo", "aprendi", "consegui"] }
+    ]
   }
 ];
 

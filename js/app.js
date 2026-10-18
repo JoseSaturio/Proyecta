@@ -64,6 +64,7 @@
         <h3>${esc(r.titulo)}</h3>
         <p class="verified">${ICON.verif} Verificado por <strong>${esc(r.empresa)}</strong></p>
         <p class="muted clamp">${esc(r.situacion)}</p>
+        <div class="tags tags--card">${r.habilidades.map(h => `<span class="chip chip--ghost">${esc(h)}</span>`).join("")}</div>
         <div class="reto-card__foot">
           <span class="meta">${ICON.reloj} ${r.minutos} minutos · Caso simulado</span>
           <button class="btn btn--outline btn--sm" data-ver="${r.id}">Ver reto ${ICON.flecha}</button>
@@ -122,10 +123,10 @@
     return `
       <section class="section section--first">
         <p class="eyebrow">Catálogo</p>
-        <h1 class="page-title">Explora retos verificados</h1>
-        <p class="muted">Elige un reto según tu área de interés. Cada uno toma entre 15 y 25 minutos.</p>
+        <h1 class="page-title">Retos para mejorar tus habilidades</h1>
+        <p class="muted">${RETOS.length} retos verificados por empresas para practicar habilidades técnicas y blandas. Cada uno toma entre 15 y 25 minutos.</p>
         <div class="toolbar">
-          <input type="search" id="buscar" class="input" placeholder="Buscar por tema o empresa…" value="${esc(busqueda)}" aria-label="Buscar retos">
+          <input type="search" id="buscar" class="input" placeholder="Buscar por tema, habilidad o empresa…" value="${esc(busqueda)}" aria-label="Buscar retos">
           <div class="filters" role="group" aria-label="Filtrar por área">
             ${["Todas", ...AREAS].map(a => `<button class="filter ${a === filtroArea ? "is-active" : ""}" data-area="${esc(a)}">${esc(a)}</button>`).join("")}
           </div>
@@ -137,7 +138,7 @@
     const q = busqueda.toLowerCase();
     const lista = RETOS.filter(r =>
       (filtroArea === "Todas" || r.area === filtroArea) &&
-      (!q || (r.titulo + r.empresa + r.area + r.situacion).toLowerCase().includes(q)));
+      (!q || [r.titulo, r.empresa, r.area, r.situacion, ...r.habilidades].join(" ").toLowerCase().includes(q)));
     return lista.length ? lista.map(tarjetaReto).join("") : `<p class="empty">No encontramos retos con ese criterio.</p>`;
   }
 
